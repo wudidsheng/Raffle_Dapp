@@ -20,7 +20,7 @@ export function Footer() {
 
   useLayoutEffect(() => {
     const provider = new ethers.JsonRpcProvider(
-      "https://eth-sepolia.g.alchemy.com/v2/08qD2KkgPPCneY_2XVygsdVq8H8NbdKx"
+      `https://eth-sepolia.g.alchemy.com/v2/${import.meta.env.VITE_ALCHEMY_KEY}`
     );
 
     const contract = new ethers.Contract(contractAddress, ABI, provider);

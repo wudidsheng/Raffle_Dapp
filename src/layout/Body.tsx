@@ -18,7 +18,7 @@ export const Body: React.FC<any> = () => {
   const JsonProvider = useRef<ethers.JsonRpcProvider>(null);
   useLayoutEffect(() => {
     const provider = new ethers.JsonRpcProvider(
-      "https://eth-sepolia.g.alchemy.com/v2/08qD2KkgPPCneY_2XVygsdVq8H8NbdKx"
+      `https://eth-sepolia.g.alchemy.com/v2/${import.meta.env.VITE_ALCHEMY_KEY}`
     );
     const contract = new ethers.Contract(contractAddress, ABI, provider);
 
@@ -69,7 +69,7 @@ export const Body: React.FC<any> = () => {
   return (
     <div className="bg-[url(/bg.svg)] bg-no-repeat bg-[300px,100%] bg-right-top pb-[2%] pr-2.5 h-[320px]">
       <div className="mr-[15%]  ml-[15%] pt-[10%] mb-[15px] text-white flex items-center gap-1.5 justify-center">
-        {winNumber.map((item,index) => (
+        {winNumber.map((item, index) => (
           <div
             key={index}
             className="w-10 h-10 border-2 border-blue-700 text-2xl leading-10 text-white text-center align-middle"
