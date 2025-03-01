@@ -1,5 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { ethers } from "ethers";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { EIP1193Provider, EIP6963AnnounceProviderEvent } from "./types";
 import { throttle } from "lodash";
 import { Loading } from "../common/Loading";

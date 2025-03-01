@@ -1,5 +1,5 @@
 import { ethers } from "ethers";
-import React, { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { ABI, contractAddress } from "../../assets/abi";
 import _ from "lodash";
 

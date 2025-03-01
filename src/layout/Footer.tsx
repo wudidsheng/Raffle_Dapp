@@ -1,4 +1,4 @@
-import React, {
+import {
   useCallback,
   useEffect,
   useLayoutEffect,
@@ -26,7 +26,7 @@ export function Footer() {
     const contract = new ethers.Contract(contractAddress, ABI, provider);
     ref.current = contract;
     JsonProvider.current = provider;
-    contract?.on("JoinGame", (events) => {
+    contract?.on("JoinGame", (_events) => {
       queryAllEvent();
     });
   }, []);
@@ -45,7 +45,7 @@ export function Footer() {
     queryAllEvent();
   }, []);
   return (
-    <div className="mt-6 min-w-120 w-fit pr-2 pl-2  pt-0.5 pb-0.5 ml-[50%] translate-x-[-50%] overflow-hidden  text-white h-24 text-center border-2 border-blue-300">
+    <div className="mt-36 min-w-120 w-fit pr-2 pl-2  pt-0.5 pb-0.5 ml-[50%] translate-x-[-50%] overflow-hidden  text-white h-24 text-center border-2 border-blue-300">
       {events.map((item, index) => {
         return (
           <p key={index} className="mt-1 h-5 truncate">

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import  { useCallback, useEffect, useState } from "react";
 import { ConnectWallet } from "../components/wallet/ConnectWallet";
 import { Loading } from "../components/common/Loading";
 import { AccountInfo } from "../components/wallet/AccountInfo";

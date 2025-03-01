@@ -67,12 +67,12 @@ export const Body: React.FC<any> = () => {
   }, []);
 
   return (
-    <div className="bg-[url(/bg.svg)] bg-no-repeat bg-[300px,100%] bg-right-top pb-[2%] pr-2.5 h-[320px]">
+    <div className="bg-[url(/bg.svg)] bg-no-repeat bg-[300px,100%] bg-[position:75%,25%] pb-[2%] pr-2.5 h-[320px]">
       <div className="mr-[15%]  ml-[15%] pt-[10%] mb-[15px] text-white flex items-center gap-1.5 justify-center">
         {winNumber.map((item, index) => (
           <div
             key={index}
-            className="w-10 h-10 border-2 border-blue-700 text-2xl leading-10 text-white text-center align-middle"
+            className="w-20 h-20 border-2 border-blue-700 text-3xl leading-20 text-white text-center align-middle"
           >{`${ethers.toBigInt(item) || "*"}`}</div>
         ))}
       </div>
