@@ -1,4 +1,4 @@
-[
+const ABI = [
     {
         "inputs": [
             {
@@ -353,3 +353,7 @@
         "type": "function"
     }
 ]
+
+const contractAddress = "0xcb2a9997C7Bb410719Bb8228Fc40F377710a0286";
+
+export { ABI, contractAddress };

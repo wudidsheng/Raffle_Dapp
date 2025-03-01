@@ -121,10 +121,10 @@ export function ConnectWallet() {
         {walletListElement}
       </div>
       <button
-        className="w-21 h-7 cursor-pointer text-[16px]  text-center font-[600] text-white bg-[#3898ff] rounded-xl"
+        className="w-[auto] pt-0.5 pr-1 pl-1 pb-0.5 h-[auto] cursor-pointer text-[16px]  text-center font-[600] text-white bg-[#3898ff] rounded-xl"
         onClick={throttle(requestAllWallet, 3000)}
       >
-        连接钱包
+        connect wallet
       </button>
       ;
     </>

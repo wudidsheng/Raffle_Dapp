@@ -1,7 +1,8 @@
-import React, { useCallback, useEffect,  useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { ConnectWallet } from "../components/wallet/ConnectWallet";
 import { Loading } from "../components/common/Loading";
 import { AccountInfo } from "../components/wallet/AccountInfo";
+import { PlayHelp } from "../components/Help/Index";
 
 export function Heard() {
   const [isConnect, setIsConnect] = useState(false);
@@ -25,7 +26,6 @@ export function Heard() {
       });
   }, []);
 
-
   useEffect(() => {
     checkWalletConnect();
     listenForWalletStatus();
@@ -46,7 +46,8 @@ export function Heard() {
   };
 
   return (
-    <div className="flex h-16 items-center justify-end mr-[3%] ml-[10%]">
+    <div className="flex h-16 items-center gap-2.5 justify-end mr-[3%] ml-[10%]">
+      <PlayHelp />
       {!isConnect && !loading ? (
         <ConnectWallet />
       ) : (
