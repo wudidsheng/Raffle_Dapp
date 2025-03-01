@@ -52,8 +52,8 @@ export function AccountInfo({ accounts }: { accounts: string[] }) {
   const copyToClipboard = useCallback(() => {
     navigator.clipboard
       .writeText(accounts[0])
-      .then(() => alert("复制成功！"))
-      .catch((err) => alert("复制失败：" + err));
+      .then(() => alert("copy ok"))
+      .catch((err) => alert("copy error" + err));
   }, [accounts]);
 
   //断开连接
