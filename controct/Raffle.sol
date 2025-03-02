@@ -21,14 +21,16 @@ contract Raffle is AutomationCompatibleInterface, VRFConsumerBaseV2Plus {
     uint256 private immutable subId;
     uint16 private immutable requestConfirmations;
     uint32 private immutable callbackGasLimit;
-
+    mapping(address => uint8[3]) private addRessToNumber;
+    mapping(address => bool) private hasJoined;
     //etc/usd 0x1b44F3514812d835EB1BDB0acB33d3fA3351Ee43
     AggregatorV3Interface internal dataFeed;
     //号码产生时间1天
     uint256 private constant intervalNumber = 60 * 60 * 24;
     //抽奖参与时间3天
     uint256 private constant intervalJoin = 60 * 60 * 24 * 3;
-    uint256 private lastTime;
+    //号码产生时间
+    uint256 public lastTime;
     //中奖号码3位
     uint8[3] private WinningNumbers;
     // 合约状态
@@ -43,8 +45,9 @@ contract Raffle is AutomationCompatibleInterface, VRFConsumerBaseV2Plus {
     error NotEnoughEthSend();
     error StatusIsOpen();
     error DateNotArrived();
+    error HasJoined();
     //自定义事件
-    event JoinGame(address indexed user);
+    event JoinGame(address indexed user,uint256 value);
 
     constructor(
         address _dataFeed,
@@ -72,22 +75,27 @@ contract Raffle is AutomationCompatibleInterface, VRFConsumerBaseV2Plus {
         ) {
             revert NotEnoughEthSend();
         }
-
-        emit JoinGame(msg.sender);
+        if (hasJoined[msg.sender]) {
+            revert HasJoined();
+        }
+        hasJoined[msg.sender] = true;
+        emit JoinGame(msg.sender,msg.value);
         _;
     }
 
     //判断是否相同
-    function areEqual(
-        uint8[3] memory arr1,
-        uint8[3] memory arr2
-    ) public pure returns (bool) {
+    function areEqual(uint8[3] memory arr1, uint8[3] memory arr2)
+        internal
+        pure
+        returns (bool)
+    {
         if (arr1.length != arr2.length) {
             return false; // 长度不同，直接返回 false
         }
         return keccak256(abi.encode(arr1)) == keccak256(abi.encode(arr2));
     }
 
+    //挑选获胜者
     function pickWiner() internal {
         winners = new address[](0);
         for (uint256 i = 0; i < i_playerWithNumberList.length; i++) {
@@ -104,6 +112,7 @@ contract Raffle is AutomationCompatibleInterface, VRFConsumerBaseV2Plus {
                 (bool success, ) = winer.call{
                     value: totalBalance / winners.length
                 }("");
+                require(success, "Transfer to winner failed");
             }
         }
         //开始新的一轮
@@ -114,7 +123,7 @@ contract Raffle is AutomationCompatibleInterface, VRFConsumerBaseV2Plus {
 
     //请求随机数
     function requestRandomWords() internal {
-        if ((block.timestamp - lastTime) > intervalNumber) {
+        if ((block.timestamp - lastTime) < intervalNumber) {
             revert DateNotArrived();
         }
         VRFV2PlusClient.RandomWordsRequest memory RandomParams = VRFV2PlusClient
@@ -133,22 +142,29 @@ contract Raffle is AutomationCompatibleInterface, VRFConsumerBaseV2Plus {
     }
 
     // fulfillRandomWords function
-    function fulfillRandomWords(
-        uint256,
-        uint256[] calldata randomWords
-    ) internal override {
-        if (index > 2) revert();
+    function fulfillRandomWords(uint256, uint256[] calldata randomWords)
+        internal
+        override
+    {
+        require(index < 3, "Index out of bounds"); // ✅ 确保索引不越界
         uint8 number = uint8(randomWords[0] % 255) + 1;
         WinningNumbers[index] = number;
         index++;
     }
 
-    function performUpkeep(bytes calldata) external {
+    function performUpkeep(bytes calldata performData) external {
         (bool upkeepNeeded, ) = checkUpkeep("");
         if (!upkeepNeeded) {
             revert();
         }
-        pickWiner();
+        if (keccak256(performData) == keccak256("changeStatus")) {
+            status = Status.OPEN;
+            lastTime = block.timestamp;
+        } else if (keccak256(performData) == keccak256("pickWinner")) {
+            pickWiner();
+        } else if (keccak256(performData) == keccak256("requestRandomWords")) {
+            requestRandomWords();
+        }
     }
 
     //自动化检测
@@ -156,43 +172,43 @@ contract Raffle is AutomationCompatibleInterface, VRFConsumerBaseV2Plus {
         bytes memory /* checkData */
     )
         public
+        view
         override
-        returns (bool upkeepNeeded, bytes memory /* performData */)
+        returns (
+            bool upkeepNeeded,
+            bytes memory /* performData */
+        )
     {
-        if (status == Status.PENDING) {
-            //关闭抽奖
-            if (block.timestamp - lastTime > intervalJoin) {
-                status = Status.OPEN;
-                lastTime = block.timestamp;
-            }
-            return (false, "0x0");
+        if (
+            status == Status.PENDING &&
+            block.timestamp - lastTime > intervalJoin
+        ) {
+            return (true, "changeStatus");
         }
-        if (WinningNumbers.length == 3) {
+        if (index == 3) {
             //选取获胜者
-            return (true, "0x0");
+            return (true, "pickWinner");
         }
         //生产随机数
         if (block.timestamp - lastTime > intervalNumber) {
-            requestRandomWords();
+            return (true, "requestRandomWords");
         }
         return (false, "0x0");
     }
 
     //参与中奖
     function enterRaffle(uint8[3] memory numbers) public payable canJoinGame {
+        addRessToNumber[msg.sender] = numbers;
         i_playerWithNumberList.push(PlayerWithNumber(msg.sender, numbers));
     }
 
-    // 获取参与者
-    function getPlayNumbers(
-        uint256 index
-    ) external view returns (uint8[3] memory) {
-        PlayerWithNumber memory player = i_playerWithNumberList[index];
-        return player.numbers;
-    }
-
-    //中间号码
+    //中奖号码
     function getWinNumbers() external view returns (uint8[3] memory) {
         return WinningNumbers;
+    }
+
+    //获取我的号码
+    function getMyNumbers() external view returns (uint8[3] memory) {
+        return addRessToNumber[msg.sender];
     }
 }
