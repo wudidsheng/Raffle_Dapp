@@ -30,7 +30,7 @@ export const Body: React.FC<any> = () => {
       });
     }, 1000);
     return () => {
-      time.current && clearInterval(time.current);
+      clearInterval(time.current);
     };
   }, []);
 
@@ -40,7 +40,7 @@ export const Body: React.FC<any> = () => {
     );
     const contract = new ethers.Contract(contractAddress, ABI, provider);
 
-    contract.on("JoinGame", async (_user) => {
+    contract.on("JoinGame", async () => {
       const balance = await provider?.getBalance(contractAddress);
       setAllBalance(ethers.formatEther(balance!));
       setAllPlay((p) => p + 1);
@@ -59,7 +59,7 @@ export const Body: React.FC<any> = () => {
     const events = await contract?.queryFilter("JoinGame", fromBlock, toBlock);
     const balance = await provider?.getBalance(contractAddress);
     const status = await contract?.status();
-    setAllPlay(events?.length!);
+    setAllPlay(events!.length || 0);
     setAllBalance(ethers.formatEther(balance!));
     //上次时间
     const lastTime = await contract?.lastTime();

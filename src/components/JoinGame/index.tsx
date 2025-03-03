@@ -23,8 +23,8 @@ export function JoinGame({ open }: { open: boolean }) {
   }, []);
 
   useEffect(() => {
-    const keyDownHandel = (evnet: KeyboardEvent) => {
-      if (evnet.key === "Escape") {
+    const keyDownHandel = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
         setShowJoin(false);
       }
     };
@@ -51,8 +51,8 @@ export function JoinGame({ open }: { open: boolean }) {
       const signer = await provider.getSigner();
       const contract = new ethers.Contract(contractAddress, ABI, signer);
 
-      const Arraydata = [formData.no1, formData.no2, formData.no3];
-      const numberArray = Arraydata.map((n) => ethers.toBigInt(n));
+      const ArrayData = [formData.no1, formData.no2, formData.no3];
+      const numberArray = ArrayData.map((n) => ethers.toBigInt(n));
 
       try {
         const tx = await contract.enterRaffle(numberArray, {
@@ -60,6 +60,7 @@ export function JoinGame({ open }: { open: boolean }) {
         });
         await tx.wait(); // 等待交易确认
         alert("join ok:");
+        window.location.reload();
         setShowJoin(false);
       } catch (error: any) {
         if (error.data) {
@@ -113,6 +114,7 @@ export function JoinGame({ open }: { open: boolean }) {
     const events = await contract.queryFilter(
       contract.filters.test(signer.address) // 过滤特定事件
     );
+    if (!events.length) return;
     const [first, ..._other] = events;
     // @ts-ignore
     const numbers = `${first?.args?.number}`.split(",").map(Number);
