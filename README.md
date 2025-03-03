@@ -6,9 +6,9 @@
 
 # 技术实现
 
-- 随机数 chain.link vrf
-- 自动执行 chain.link automation
+- 随机数                chain.link vrf
+- 自动执行(corn)                  chain.link automation
 
 
 # 合约地址
- https://testnet.routescan.io/address/0x2eE2E95eeC198Aa74b3c938845C2219228A56550/contract/11155111/readContract?chainid=11155111
+[routescan合约地址](https://testnet.routescan.io/address/0x2eE2E95eeC198Aa74b3c938845C2219228A56550)
