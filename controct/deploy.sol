@@ -3,7 +3,7 @@ pragma solidity ^0.8.2;
 import {Raffle} from "./Raffle.sol";
 
 contract DeployRaffle {
-    Raffle raffle;
+    Raffle public raffle;
 
     constructor() {
         raffle = new Raffle(

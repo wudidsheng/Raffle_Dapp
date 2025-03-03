@@ -168,6 +168,25 @@ const ABI =[
     "type": "event"
   },
   {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "user",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint8[3]",
+        "name": "number",
+        "type": "uint8[3]"
+      }
+    ],
+    "name": "test",
+    "type": "event"
+  },
+  {
     "inputs": [],
     "name": "acceptOwnership",
     "outputs": [],
@@ -221,7 +240,7 @@ const ABI =[
         "type": "uint8[3]"
       }
     ],
-    "stateMutability": "view",
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -348,6 +367,6 @@ const ABI =[
   }
 ]
 
-const contractAddress = "0xC783Aea0A99D5b49211B38c80D7C68445aDF2fC2";
+const contractAddress = "0x2eE2E95eeC198Aa74b3c938845C2219228A56550";
 
 export { ABI, contractAddress };

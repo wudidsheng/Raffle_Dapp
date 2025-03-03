@@ -46,6 +46,7 @@ export function Footer() {
   }, []);
   return (
     <div className="mt-36 min-w-120 w-fit pr-2 pl-2  pt-0.5 pb-0.5 ml-[50%] translate-x-[-50%] overflow-hidden  text-white h-24 text-center border-2 border-blue-300">
+        <h3 className="text-white">activity</h3>
       {events.map((item, index) => {
         return (
           <p key={index} className="mt-1 h-5 truncate">

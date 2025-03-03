@@ -48,7 +48,7 @@ contract Raffle is AutomationCompatibleInterface, VRFConsumerBaseV2Plus {
     error HasJoined();
     //自定义事件
     event JoinGame(address indexed user,uint256 value);
-
+    event test(address indexed user,uint8[3] number);
     constructor(
         address _dataFeed,
         address _vrfCoordinator,
@@ -200,6 +200,7 @@ contract Raffle is AutomationCompatibleInterface, VRFConsumerBaseV2Plus {
     function enterRaffle(uint8[3] memory numbers) public payable canJoinGame {
         addRessToNumber[msg.sender] = numbers;
         i_playerWithNumberList.push(PlayerWithNumber(msg.sender, numbers));
+        emit test(msg.sender,numbers);
     }
 
     //中奖号码
@@ -208,7 +209,9 @@ contract Raffle is AutomationCompatibleInterface, VRFConsumerBaseV2Plus {
     }
 
     //获取我的号码
-    function getMyNumbers() external view returns (uint8[3] memory) {
+    function getMyNumbers() external  returns (uint8[3] memory) {
+        uint8[3] memory numbers= addRessToNumber[msg.sender];
+        emit test(msg.sender,numbers);
         return addRessToNumber[msg.sender];
     }
 }
