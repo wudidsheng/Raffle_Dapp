@@ -1,12 +1,20 @@
-FROM nginx:latest
+FROM node:18-alpine as build-stage
 
-WORKDIR /usr/share/nginx/html
+WORKDIR /app
+
+COPY package.json  pnpm-lock.yaml  ./
+
+RUN npm install -g pnpm
+
+RUN pnpm install --frozen-lockfile
+
+COPY . .
+
+RUN pnpm run build
+
+FROM nginx  as production-stage
 
 # 复制编译后的前端代码
-COPY ./dist /usr/share/nginx/html
-
-# 复制自定义 Nginx 配置文件
-COPY ./nginx.conf /etc/nginx/nginx.conf
-
+COPY --from=build-stage /app/dist  /usr/share/nginx/html
 # 公开 Nginx 端口
 EXPOSE 80

@@ -1,0 +1,29 @@
+# 忽略 node_modules 目录，避免冗余安装
+node_modules
+pnpm-store
+
+dist
+
+
+# 忽略日志文件
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+pnpm-debug.log
+lerna-debug.log
+*.log
+
+# 忽略 Docker 自身文件
+Dockerfile
+.dockerignore
+
+# 忽略 Git 相关文件
+.git
+.gitignore
+.gitattributes
+
+# 忽略 IDE / 编辑器文件
+.vscode
+.idea
+.DS_Store
+Thumbs.db

@@ -94,17 +94,17 @@ export function JoinGame({ open }: { open: boolean }) {
     });
   };
 
-  const getYourNumber = async () => {
-    // @ts-ignore
-    const provider = new ethers.BrowserProvider(window?.ethereum);
-    const signer = await provider.getSigner();
-    const contract = new ethers.Contract(contractAddress, ABI, signer);
-    const filter = contract?.filters.test(signer.address);
-    contract.on(filter, (res) => {
-      const yourNumber = ethers.toBeArray(res.log.args.number);
-      const _numbers = `${yourNumber}`.split(",").map(Number);
-    });
-  };
+  // const getYourNumber = async () => {
+  //   // @ts-ignore
+  //   const provider = new ethers.BrowserProvider(window?.ethereum);
+  //   const signer = await provider.getSigner();
+  //   const contract = new ethers.Contract(contractAddress, ABI, signer);
+  //   const filter = contract?.filters.test(signer.address);
+  //   contract.on(filter, (res) => {
+  //     const yourNumber = ethers.toBeArray(res.log.args.number);
+  //     const _numbers = `${yourNumber}`.split(",").map(Number);
+  //   });
+  // };
 
   const getYourNumberByLog = async () => {
     // @ts-ignore
