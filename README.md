@@ -8,3 +8,7 @@
 
 - 随机数 chain.link vrf
 - 自动执行 chain.link automation
+
+
+# 合约地址
+ https://testnet.routescan.io/address/0x82F75757Ed0A71af1460018d01b5D407317a180B/contract/11155111/readContract?chainid=11155111

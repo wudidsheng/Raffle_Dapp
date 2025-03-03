@@ -22,6 +22,15 @@ export function JoinGame() {
   }, []);
 
   useEffect(() => {
+    const keyDownHandel = (evnet: KeyboardEvent) => {
+      if (evnet.key === "Escape") {
+        setShowJoin(false);
+      }
+    };
+    document.addEventListener("keyup", keyDownHandel);
+  }, []);
+
+  useEffect(() => {
     checkLogin();
   }, []);
 
@@ -31,6 +40,7 @@ export function JoinGame() {
       if (!login) {
         return alert("Please connect your wallet first");
       }
+
       const valueFilter = Object.values(formData).find((item) => !item);
       if (valueFilter) {
         return alert("Please enter a number between 1 and 256");
@@ -39,15 +49,28 @@ export function JoinGame() {
       const provider = new ethers.BrowserProvider(window?.ethereum);
       const signer = await provider.getSigner();
       const contract = new ethers.Contract(contractAddress, ABI, signer);
-      const tx = await contract.enterRaffle(Object.values(formData), {
-        value: ethers.parseUnits("0.002").toString(),
-      });
-      await tx.wait(); // 等待交易确认
-      alert("join ok:");
-      setShowJoin(false);
+
+      const Arraydata = [formData.no1, formData.no2, formData.no3];
+      const numberArray = Arraydata.map((n) => ethers.toBigInt(n));
+
+      try {
+        const tx = await contract.enterRaffle(numberArray, {
+          value: ethers.parseUnits("0.002").toString(),
+        });
+        await tx.wait(); // 等待交易确认
+        alert("join ok:");
+        setShowJoin(false);
+      } catch (error: any) {
+        if (error.data) {
+          const decodedError = contract.interface.parseError(error.data);
+          console.log(decodedError.name);
+          alert(decodedError.name); //
+        }
+      }
     },
     [login]
   );
+
   const handleChange = (e: any) => {
     const { name, value } = e.target;
 

@@ -43,8 +43,8 @@ export const Body: React.FC<any> = () => {
     const status = await contract?.status();
     setAllPlay(events?.length!);
     setAllBalance(ethers.formatEther(balance!));
-
-    console.log(`${status}`, `${status}` === `0`);
+    const myNumber = await contract?.getMyNumbers();
+    console.log(`${myNumber}`,'====myNumber');
     setStatus(() => {
       if (`${status}` === "0") {
         return "OPENING";
