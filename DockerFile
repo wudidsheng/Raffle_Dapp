@@ -16,7 +16,7 @@ RUN pnpm run build
 ARG VITE_ALCHEMY_KEY
 
 # 设置环境变量（可选）
-ENV VITE_ALCHEMY_KEY=${VITE_API_URL}
+ENV VITE_ALCHEMY_KEY=${VITE_ALCHEMY_KEY}
 
 FROM nginx  as production-stage
 
