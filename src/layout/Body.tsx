@@ -40,56 +40,63 @@ export const Body: React.FC<any> = () => {
     );
     const contract = new ethers.Contract(contractAddress, ABI, provider);
 
-    contract.on("JoinGame", async () => {
-      const balance = await provider?.getBalance(contractAddress);
-      setAllBalance(ethers.formatEther(balance!));
-      setAllPlay((p) => p + 1);
-    });
+    // contract.on("JoinGame", async () => {
+    //   const balance = await provider?.getBalance(contractAddress);
+    //   setAllBalance(ethers.formatEther(balance!));
+    //   setAllPlay((p) => p + 1);
+    // });
     ref.current = contract;
     JsonProvider.current = provider;
   }, []);
-
   //获取参与合约资金
   const getPalyUser = useCallback(async () => {
-    const contract = ref.current;
-    const provider = JsonProvider.current;
-    const latestBlock = await provider?.getBlockNumber();
-    const fromBlock = latestBlock! - 10000; // 查询最近 10000 个区块
-    const toBlock = "latest";
-    const events = await contract?.queryFilter("JoinGame", fromBlock, toBlock);
-    const balance = await provider?.getBalance(contractAddress);
-    const status = await contract?.status();
-    setAllPlay(events!.length || 0);
-    setAllBalance(ethers.formatEther(balance!));
-    //上次时间
-    const lastTime = await contract?.lastTime();
-    const block = await provider?.getBlock("latest");
-    //当前时间
-    const nowTimestamp = block?.timestamp;
-
-    if (`${status}` === `0`) {
-      const newTime = 24 * 24 * 60 * 3 + Number(lastTime);
-      const timesLeft = newTime - Number(nowTimestamp);
-      setTimeLeft(timesLeft);
-    } else {
-      const newTime = 24 * 24 * 60 + Number(lastTime);
-      const timesLeft = newTime - Number(nowTimestamp);
-      setTimeLeft(timesLeft);
-    }
-    setStatus(() => {
-      if (`${status}` === "0") {
-        return "OPENING";
+    try {
+      const contract = ref.current;
+      const provider = JsonProvider.current;
+      const latestBlock = await provider?.getBlockNumber();
+      const fromBlock = latestBlock! - 10000; // 查询最近 10000 个区块
+      const toBlock = "latest";
+      const events = await contract?.queryFilter("JoinGame", fromBlock, toBlock);
+      const balance = await provider?.getBalance(contractAddress);
+      const status = await contract?.status();
+      setAllPlay(events!.length || 0);
+      setAllBalance(ethers.formatEther(balance!));
+      //上次时间
+      const lastTime = await contract?.lastTime();
+      const block = await provider?.getBlock("latest");
+      //当前时间
+      const nowTimestamp = block?.timestamp;
+      if (`${status}` === `0`) {
+        const newTime = 24 * 24 * 60 * 3 + Number(lastTime);
+        const timesLeft = newTime - Number(nowTimestamp);
+        setTimeLeft(timesLeft);
+      } else {
+        const newTime = 24 * 24 * 60 + Number(lastTime);
+        const timesLeft = newTime - Number(nowTimestamp);
+        setTimeLeft(timesLeft);
       }
-      return "FINISHED";
-    });
+      setStatus(() => {
+        if (`${status}` === "0") {
+          return "OPENING";
+        }
+        return "FINISHED";
+      });
+    } catch (error) {
+      console.log(error);
+    }
   }, []);
 
   // 获取开奖号码
   const getWinNumber = useCallback(async () => {
-    const contract = ref.current;
-    const winNumber = await contract?.getWinNumbers();
+    try {
+      const contract = ref.current;
+      const winNumber = await contract?.getWinNumbers();
 
-    setWinNumber([...winNumber] as unknown as string[]);
+      setWinNumber([...winNumber] as unknown as string[]);
+    } catch (error) {
+      console.log(error);
+    }
+
   }, []);
 
   useEffect(() => {

@@ -12,6 +12,12 @@ COPY . .
 
 RUN pnpm run build
 
+# 定义构建时变量
+ARG VITE_ALCHEMY_KEY
+
+# 设置环境变量（可选）
+ENV VITE_ALCHEMY_KEY=${VITE_API_URL}
+
 FROM nginx  as production-stage
 
 # 复制编译后的前端代码

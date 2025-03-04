@@ -26,19 +26,30 @@ export function Footer() {
     const contract = new ethers.Contract(contractAddress, ABI, provider);
     ref.current = contract;
     JsonProvider.current = provider;
-    contract?.on("JoinGame", (_events) => {
-      queryAllEvent();
-    });
+    // const joinListener = () => {
+    //   console.log("监听joinGame")
+    //   queryAllEvent();
+    // }
+    // contract?.on("JoinGame", joinListener);
+
+    // return () => {
+    //   console.log("移除了事件监听")
+    //   contract.off("JoinGame", joinListener);
+    // }
   }, []);
 
   const queryAllEvent = useCallback(async () => {
-    const provider = JsonProvider.current;
-    const contract = ref.current;
-    const latestBlock = await provider?.getBlockNumber();
-    const fromBlock = latestBlock! - 10000; // 查询最近 10000 个区块
-    const toBlock = "latest";
-    const events = await contract?.queryFilter("JoinGame", fromBlock, toBlock);
-    setEvents(events!);
+    try {
+      const provider = JsonProvider.current;
+      const contract = ref.current;
+      const latestBlock = await provider?.getBlockNumber();
+      const fromBlock = latestBlock! - 10000; // 查询最近 10000 个区块
+      const toBlock = "latest";
+      const events = await contract?.queryFilter("JoinGame", fromBlock, toBlock);
+      setEvents(events!);
+    } catch (error) {
+      console.log(error);
+    }
   }, []);
 
   useEffect(() => {
@@ -46,7 +57,7 @@ export function Footer() {
   }, []);
   return (
     <div className="mt-36 min-w-120 w-fit pr-2 pl-2  pt-0.5 pb-0.5 ml-[50%] translate-x-[-50%] overflow-hidden  text-white h-24 text-center border-2 border-blue-300">
-        <h3 className="text-white">activity</h3>
+      <h3 className="text-white">activity</h3>
       {events.map((item, index) => {
         return (
           <p key={index} className="mt-1 h-5 truncate">

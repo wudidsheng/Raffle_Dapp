@@ -6,8 +6,8 @@ import { Footer } from "./layout/Footer";
 function App() {
   return (
     <React.Fragment>
-      <Heard />
-      <Body />
+      <Heard /> 
+      <Body /> 
       <Footer />
     </React.Fragment>
   );
